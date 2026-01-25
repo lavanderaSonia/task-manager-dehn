@@ -1,90 +1,66 @@
-import type { Task } from "@/types/Task";
-
-const STORAGE_KEY = 'tasks';
+import type { ITaskRepository } from '@/repositories/ITaskRepository';
+import type { Task } from '@/types/Task';
+import { LocalStorageTaskRepository } from '@/repositories/LocalStorageTaskRepository';
 
 /**
- * Task service to persist data
+ * Task Service with Dependency Injection
+ * Business logic layer that abstracts data access
  */
-export const taskService = {
+export class TaskService {
+  private repository: ITaskRepository;
+
+  constructor(repository: ITaskRepository) {
+    this.repository = repository;
+  }
+
   /**
-   * Get all tasks 
-   * @returns list of tasks
+   * Get all tasks
+   * @returns list of all tasks
    */
-  getTasks(): Task[] {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error('Error getting tasks from localStorage:', error);
-      return [];
-    }
-  },
+  async getTasks(): Promise<Task[]> {
+    return this.repository.getTasks();
+  }
 
   /**
    * Get task information by id
    * @param id task id
-   * @returns information of selected task
+   * @returns information of selected task or null
    */
-  getTaskById(id: string): Task | null {
-    const tasks = this.getTasks();
-    return tasks.find(task => task.id === id) || null;
-  },
+  async getTaskById(id: string): Promise<Task | null> {
+    return this.repository.getTaskById(id);
+  }
 
   /**
    * Add task to list
    * @param task task to add
    */
-  addTask(task: Task): void {
-    try {
-      const updatedTasks = [...this.getTasks(), task];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
-    } catch (error) {
-      console.error('Error adding task to localStorage:', error);
-    }
-  },
+  async addTask(task: Task): Promise<void> {
+    return this.repository.addTask(task);
+  }
 
   /**
    * Update task with the information
    * @param id task id
    * @param updates fields to update
-   * @returns true if tasks updated or false in case of an error
+   * @returns true if task updated or false if not found
    */
-  updateTask(id: string, updates: Partial<Task>): boolean {
-    try {
-      const tasks = this.getTasks();
-      const taskExists = tasks.some(task => task.id === id);
-
-      if (!taskExists) return false;
-
-      const updatedTasks = tasks.map(task =>
-        task.id === id ? { ...task, ...updates } : task
-      );
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
-      return true;
-    } catch (error) {
-      console.error('Error updating task in localStorage:', error);
-      return false;
-    }
-  },
+  async updateTask(id: string, updates: Partial<Task>): Promise<boolean> {
+    return this.repository.updateTask(id, updates);
+  }
 
   /**
    * Delete task by id
    * @param id task id
-   * @returns True if process complete or false in other case
+   * @returns true if task deleted or false if not found
    */
-  deleteTask(id: string): boolean {
-    try {
-      const tasks = this.getTasks();
-      const filteredTasks = tasks.filter(task => task.id !== id);
-
-      if (filteredTasks.length === tasks.length) return false;
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredTasks));
-      return true;
-    } catch (error) {
-      console.error('Error deleting task from localStorage:', error);
-      return false;
-    }
+  async deleteTask(id: string): Promise<boolean> {
+    return this.repository.deleteTask(id);
   }
-};
+}
+
+/**
+ * Default task service instance using localStorage
+ * Change the repository implementation to switch persistence layer
+ */
+const defaultRepository = new LocalStorageTaskRepository();
+export const taskService = new TaskService(defaultRepository);

@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in data" :key="row.id"
+        <tr v-for="(row, i) in data" :key="i"
           class="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-150">
           <td v-for="col in columns" :key="col.key" class="px-6 py-4 text-sm text-gray-800">
             {{ formatValue(row[col.key]) }}
@@ -27,15 +27,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
-interface Column {
-  key: string;
+<script setup lang="ts" generic="T extends object">
+type Column<T> = {
+  key: keyof T;
   label: string;
 }
 
 defineProps<{
-  data: Record<string, any>[];
-  columns: Column[];
+  data: T[];
+  columns: Column<T>[];
 }>();
 
 const formatValue = (value: any) => {

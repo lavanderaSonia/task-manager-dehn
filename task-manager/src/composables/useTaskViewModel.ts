@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 import { taskService } from '@/services/task-service';
 import type { Task } from '@/types/Task';
-
+import { ERROR_MESSAGES } from '@/config/messages';
 
 /**
  * Task ViewModel Composable
@@ -22,7 +22,7 @@ export function useTaskViewModel() {
     try {
       tasks.value = await taskService.getTasks();
     } catch (err) {
-      error.value = 'Error loading tasks';
+      error.value = ERROR_MESSAGES.LOAD_TASKS;
       console.error(err);
     } finally {
       loading.value = false;
@@ -39,7 +39,7 @@ export function useTaskViewModel() {
       tasks.value = await taskService.getTasks();
       error.value = null;
     } catch (err) {
-      error.value = 'Error adding task';
+      error.value = ERROR_MESSAGES.ADD_TASK;
       console.error(err);
     }
   };
@@ -57,11 +57,11 @@ export function useTaskViewModel() {
         tasks.value = await taskService.getTasks();
         error.value = null;
       } else {
-        error.value = 'Task not found';
+        error.value = ERROR_MESSAGES.TASK_NOT_FOUND;
       }
       return success;
     } catch (err) {
-      error.value = 'Error updating task';
+      error.value = ERROR_MESSAGES.UPDATE_TASK;
       console.error(err);
       return false;
     }
@@ -79,11 +79,11 @@ export function useTaskViewModel() {
         tasks.value = await taskService.getTasks();
         error.value = null;
       } else {
-        error.value = 'Task not found';
+        error.value = ERROR_MESSAGES.TASK_NOT_FOUND;
       }
       return success;
     } catch (err) {
-      error.value = 'Error deleting task';
+      error.value = ERROR_MESSAGES.DELETE_TASK;
       console.error(err);
       return false;
     }

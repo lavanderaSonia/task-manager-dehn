@@ -7,9 +7,9 @@
         <!-- Title input -->
         <div class="mb-4">
           <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-            Title
+            {{ FORM_LABELS.TITLE }}
           </label>
-          <input id="title" v-model="formData.title" type="text" placeholder="Enter task title"
+          <input id="title" v-model="formData.title" type="text" :placeholder="PLACEHOLDER_TEXTS.TITLE"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required />
         </div>
@@ -17,16 +17,17 @@
         <!-- Description input -->
         <div class="mb-4">
           <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-            Description
+            {{ FORM_LABELS.DESCRIPTION }}
           </label>
-          <textarea id="description" v-model="formData.description" placeholder="Enter task description" rows="4"
+          <textarea id="description" v-model="formData.description" :placeholder="PLACEHOLDER_TEXTS.DESCRIPTION"
+            rows="4"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
 
         <!-- Due date input -->
         <div class="mb-4">
           <label for="dueDate" class="block text-sm font-medium text-gray-700 mb-2">
-            Due Date
+            {{ FORM_LABELS.DUE_DATE }}
           </label>
           <input id="dueDate" v-model="formData.dueDate" type="date"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -41,6 +42,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Form from '@/components/Form.vue';
 import { useTaskViewModel } from '@/composables/useTaskViewModel';
+import { APP_ROUTES } from '@/config/routes';
+import { FORM_LABELS, PLACEHOLDER_TEXTS } from '@/config/ui-labels';
 
 const router = useRouter();
 const { addNewTask } = useTaskViewModel();
@@ -58,13 +61,13 @@ const handleSubmit = async () => {
       description: formData.value.description,
       dueDate: formData.value.dueDate ? new Date(formData.value.dueDate) : new Date(),
     });
-    router.push('/tasks');
+    router.push(APP_ROUTES.TASKS);
   } catch (error) {
     console.error('Error adding task:', error);
   }
 };
 
 const handleCancel = () => {
-  router.push('/tasks');
+  router.push(APP_ROUTES.TASKS);
 };
 </script>

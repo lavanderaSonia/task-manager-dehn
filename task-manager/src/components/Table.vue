@@ -34,12 +34,14 @@
     </table>
     <!-- Empty state -->
     <div v-if="!data || data.length === 0" class="p-12 text-center text-gray-500">
-      <p class="text-sm font-medium">No data available</p>
+      <p class="text-sm font-medium">{{ INFO_MESSAGES.NO_DATA }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" generic="T extends object">
+import { INFO_MESSAGES } from '@/config/messages';
+
 type Action = {
   name: string;
   icon: string;

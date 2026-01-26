@@ -51,6 +51,8 @@ type Column<T> = {
   label: string;
 }
 
+type FormatValue<T> = T[keyof T];
+
 defineProps<{
   data: T[];
   columns: Column<T>[];
@@ -61,9 +63,10 @@ defineEmits<{
   action: [payload: { actionName: string; rowData: T }];
 }>();
 
-const formatValue = (value: any) => {
-  if (typeof value === 'boolean') return value ? '✓' : '✗';
-  if (value === null || value === undefined) return '-';
+const formatValue = (value: FormatValue<T>): string => {
+  if (value instanceof Date) {
+    return value.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
   return String(value);
 };
 </script>

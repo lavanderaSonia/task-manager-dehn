@@ -6,4 +6,7 @@ export interface Task {
   state: State;
 }
 
-type State = 'Pending' | 'Completed';
+export enum State {
+  PENDING = 'Pending',
+  COMPLETED = 'Completed'
+}

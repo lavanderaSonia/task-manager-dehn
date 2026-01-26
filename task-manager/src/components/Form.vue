@@ -7,19 +7,15 @@
 
     <!-- Actions -->
     <div class="flex gap-3 justify-end">
-      <button type="button" @click="$emit('cancel')"
-        class="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition-colors duration-150 cursor-pointer font-medium">
-        Cancelar
-      </button>
-      <button type="submit"
-        class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition-colors duration-150 cursor-pointer font-medium">
-        Guardar
-      </button>
+      <Button title="Cancelar" variant="secondary" @click="$emit('cancel')" />
+      <Button title="Guardar" variant="primary" @click="$emit('submit')" />
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
+import Button from './Button.vue';
+
 defineEmits<{
   submit: [];
   cancel: [];

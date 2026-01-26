@@ -42,6 +42,35 @@ The application uses a N-Layers architecture that make easier maintenance and te
 - **Maintainability**: Each layer has its responsibility
 - **Decoupling**: Upper layers don't depend on lower layers
 
+##### Switching from localStorage to API
+
+You only need to change one line:
+
+```typescript
+// localStorage
+const defaultRepository = new LocalStorageTaskRepository();
+
+// API
+const defaultRepository = new ApiTaskRepository();
+
+export const taskService = new TaskService(defaultRepository);
+```
+
+Components and ViewModels remain unchanged.
+
+##### Why async/await for localStorage?
+
+localStorage is fast (synchronous), but this app uses `async/await` everywhere. Why?
+
+So the code works the same with localStorage or an API. If we use synchronous code initially, we'd have to rewrite everything when adding an API. Using async from the start keeps the code flexible.
+
+**In practice**:
+- **localStorage**: Data is ready instantly, but we treat it as if it takes time
+- **API**: Data takes time to arrive over the network
+- **The code**: Works the same in both cases
+
+That’s why we should build flexible code from the start, with future scalability in mind.
+
 ### The Layers
 
 ```
@@ -136,34 +165,5 @@ Integration tests cover all layers:
 - **Service Layer**: Business logic (CRUD operations)
 - **ViewModel Layer**: State management and error handling
 
-Tests use Vitest and validate the full stack with mock repositories when needed. Each layer tested independently but also as integrated workflow.
-
-#### Switching from localStorage to API
-
-You only need to change one line:
-
-```typescript
-// localStorage
-const defaultRepository = new LocalStorageTaskRepository();
-
-// API
-const defaultRepository = new ApiTaskRepository();
-
-export const taskService = new TaskService(defaultRepository);
-```
-
-Components and ViewModels remain unchanged.
-
-### Why async/await for localStorage?
-
-localStorage is fast (synchronous), but this app uses `async/await` everywhere. Why?
-
-So the code works the same with localStorage or an API. If we use synchronous code initially, we'd have to rewrite everything when adding an API. Using async from the start keeps the code flexible.
-
-**In practice**:
-- **localStorage**: Data is ready instantly, but we treat it as if it takes time
-- **API**: Data takes time to arrive over the network
-- **The code**: Works the same in both cases
-
-That’s why we should build flexible code from the start, with future scalability in mind. 
+Tests use Vitest and validate the full stack with mock repositories when needed. Each layer tested independently but also as integrated workflow. 
 

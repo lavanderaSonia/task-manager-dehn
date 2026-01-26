@@ -134,7 +134,7 @@ describe('Task Manager - Integration Tests', () => {
     })
   })
 
-  describe('Loading States', () => {
+  describe('Loading and Error States', () => {
     it('should manage loading state during operations', async () => {
       const { loadTasks, loading } = useTaskViewModel()
 
@@ -143,6 +143,25 @@ describe('Task Manager - Integration Tests', () => {
       expect(loading.value).toBe(true)
       await promise
       expect(loading.value).toBe(false)
+    })
+
+    it('should set and clear error states correctly', async () => {
+      const { removeTask, updateExistingTask, addNewTask, error } = useTaskViewModel()
+
+      // Error should be null initially
+      expect(error.value).toBeNull()
+
+      // Successful operation clears error
+      await addNewTask({ title: 'Task', description: 'Desc', dueDate: new Date() })
+      expect(error.value).toBeNull()
+
+      // Error on non-existent task removal
+      await removeTask('fake-id-1')
+      expect(error.value).toBe('Task not found')
+
+      // Error on non-existent task update
+      await updateExistingTask('fake-id-2', { title: 'Test' })
+      expect(error.value).toBe('Task not found')
     })
   })
 

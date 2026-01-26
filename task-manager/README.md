@@ -128,6 +128,16 @@ Components follow a clear separation of concerns:
 - Consistent styling across the app
 - Easy to maintain and extend
 
+### Testing Strategy
+
+Integration tests cover all layers:
+
+- **Repository Layer**: Data persistence to localStorage
+- **Service Layer**: Business logic (CRUD operations)
+- **ViewModel Layer**: State management and error handling
+
+Tests use Vitest and validate the full stack with mock repositories when needed. Each layer tested independently but also as integrated workflow.
+
 #### Switching from localStorage to API
 
 You only need to change one line:

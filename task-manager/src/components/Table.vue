@@ -1,26 +1,27 @@
 <template>
-  <div class="bg-white rounded border border-gray-200">
+  <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-300">
     <table class="w-full">
-      <thead>
+      <thead class="bg-gray-100 border-b-2 border-gray-300">
         <tr>
           <th v-for="(col, index) in columns" :key="col.key" :class="[
-            'px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider',
-            index < columns.length - 1 ? 'border-r border-gray-200' : ''
+            'px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase',
+            index < columns.length - 1 ? 'border-r border-gray-300' : ''
           ]">
             {{ col.label }}
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in data" :key="row.id" class="border-b border-gray-200 last:border-b-0">
-          <td v-for="col in columns" :key="col.key" class="px-6 py-3 text-sm text-slate-700">
+        <tr v-for="row in data" :key="row.id"
+          class="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-150">
+          <td v-for="col in columns" :key="col.key" class="px-6 py-4 text-sm text-gray-800">
             {{ formatValue(row[col.key]) }}
           </td>
         </tr>
       </tbody>
     </table>
     <!-- Empty state -->
-    <div v-if="!data || data.length === 0" class="p-12 text-center text-slate-500">
+    <div v-if="!data || data.length === 0" class="p-12 text-center text-gray-500">
       <p class="text-sm font-medium">No data available</p>
     </div>
   </div>

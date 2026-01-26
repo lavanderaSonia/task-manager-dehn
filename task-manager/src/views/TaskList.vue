@@ -15,15 +15,7 @@
 
       <!-- Tasks table -->
       <div v-else>
-        <Table :data="tasks" :columns="[
-          { key: 'id', label: 'ID' },
-          { key: 'title', label: 'Title' },
-          { key: 'description', label: 'Description' },
-          { key: 'dueDate', label: 'Due date' },
-          { key: 'state', label: 'State' }
-        ]" :actions="[
-          { name: 'edit', icon: '✏️' },
-          { name: 'delete', icon: '🗑️' }]" @action="handleAction" />
+        <Table :data="tasks" :columns="tableColumns" :actions="tableActions" @action="handleAction" />
       </div>
     </div>
   </div>
@@ -36,6 +28,19 @@ import { useTaskViewModel } from '@/composables/useTaskViewModel';
 import type { Task } from '@/types/Task';
 
 const { tasks, loading, error, loadTasks } = useTaskViewModel();
+
+const tableColumns: Array<{ key: keyof Task; label: string }> = [
+  { key: 'id', label: 'ID' },
+  { key: 'title', label: 'Title' },
+  { key: 'description', label: 'Description' },
+  { key: 'dueDate', label: 'Due date' },
+  { key: 'state', label: 'State' }
+];
+
+const tableActions: Array<{ name: string; icon: string }> = [
+  { name: 'edit', icon: '✏️' },
+  { name: 'delete', icon: '🗑️' }
+];
 
 onMounted(() => {
   loadTasks();

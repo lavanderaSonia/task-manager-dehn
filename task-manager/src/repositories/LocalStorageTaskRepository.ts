@@ -1,12 +1,13 @@
 import type { ITaskRepository } from './ITaskRepository';
 import type { Task } from '@/types/Task';
+import { STORAGE_KEYS } from '@/config/storage-keys';
 
 /**
  * LocalStorage implementation of TaskRepository
  * Persists tasks in browser localStorage
  */
 export class LocalStorageTaskRepository implements ITaskRepository {
-  private readonly STORAGE_KEY = 'tasks';
+  private readonly STORAGE_KEY = STORAGE_KEYS.TASKS;
 
   private deserializeTask(taskData: any): Task {
     return {

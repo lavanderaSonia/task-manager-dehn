@@ -7,14 +7,15 @@
 
     <!-- Actions -->
     <div class="flex gap-3 justify-end">
-      <Button title="Cancelar" variant="secondary" @click="$emit('cancel')" />
-      <Button title="Guardar" variant="primary" @click="$emit('submit')" />
+      <Button :title="BUTTON_LABELS.CANCEL" variant="secondary" @click="$emit('cancel')" />
+      <Button :title="BUTTON_LABELS.SAVE" variant="primary" @click="$emit('submit')" />
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
 import Button from './Button.vue';
+import { BUTTON_LABELS } from '@/config/ui-labels';
 
 defineEmits<{
   submit: [];

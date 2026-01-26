@@ -15,6 +15,9 @@
 
       <!-- Tasks table -->
       <div v-else>
+        <div class="flex justify-end mb-4">
+          <Button title="+ Add task" variant="primary" @click="handleAddTask" />
+        </div>
         <Table :data="tasks" :columns="tableColumns" :actions="tableActions" @action="handleAction" />
       </div>
     </div>
@@ -24,10 +27,14 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import Table from '@/components/Table.vue';
+import Button from '@/components/Button.vue';
 import { useTaskViewModel } from '@/composables/useTaskViewModel';
 import type { Task } from '@/types/Task';
+import { useRouter } from 'vue-router';
 
 const { tasks, loading, error, loadTasks } = useTaskViewModel();
+
+const router = useRouter();
 
 const tableColumns: Array<{ key: keyof Task; label: string }> = [
   { key: 'id', label: 'ID' },
@@ -48,5 +55,8 @@ onMounted(() => {
 
 const handleAction = ({ actionName, rowData }: { actionName: string, rowData: Task }) => {
   console.log("SELECTED", actionName, rowData);
+}
+const handleAddTask = () => {
+  router.push('/add-task')
 }
 </script>

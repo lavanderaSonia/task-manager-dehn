@@ -19,8 +19,11 @@
           { key: 'id', label: 'ID' },
           { key: 'title', label: 'Title' },
           { key: 'description', label: 'Description' },
-          { key: 'status', label: 'Status' }
-        ]" />
+          { key: 'dueDate', label: 'Due date' },
+          { key: 'state', label: 'State' }
+        ]" :actions="[
+          { name: 'edit', icon: '✏️' },
+          { name: 'delete', icon: '🗑️' }]" @action="handleAction" />
       </div>
     </div>
   </div>
@@ -30,10 +33,15 @@
 import { onMounted } from 'vue';
 import Table from '@/components/Table.vue';
 import { useTaskViewModel } from '@/composables/useTaskViewModel';
+import type { Task } from '@/types/Task';
 
 const { tasks, loading, error, loadTasks } = useTaskViewModel();
 
 onMounted(() => {
   loadTasks();
 });
+
+const handleAction = ({ actionName, rowData }: { actionName: string, rowData: Task }) => {
+  console.log("SELECTED", actionName, rowData);
+}
 </script>

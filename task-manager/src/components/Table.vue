@@ -9,13 +9,25 @@
           ]">
             {{ col.label }}
           </th>
+          <th v-if="actions && actions.length > 0"
+            class="border-l border-gray-300 px-6 py-4 text-left text-xs font-bold text-gray-900 uppercase">
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, i) in data" :key="i"
-          class="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-150">
+        <tr v-for="(row, i) in data" :key="i" class="border-b border-gray-200">
           <td v-for="col in columns" :key="col.key" class="px-6 py-4 text-sm text-gray-800">
             {{ formatValue(row[col.key]) }}
+          </td>
+          <td v-if="actions && actions.length > 0" class="px-6 py-4 text-sm text-gray-800">
+            <div class="flex gap-2">
+              <button v-for="action in actions" :key="action.name"
+                @click="$emit('action', { actionName: action.name, rowData: row })" :title="action.name"
+                class="inline-flex items-center justify-center p-2 cursor-pointer">
+                <span>{{ action.icon }}</span>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -28,6 +40,10 @@
 </template>
 
 <script setup lang="ts" generic="T extends object">
+type Action = {
+  name: string;
+  icon: string;
+};
 type Column<T> = {
   key: keyof T;
   label: string;
@@ -36,6 +52,11 @@ type Column<T> = {
 defineProps<{
   data: T[];
   columns: Column<T>[];
+  actions?: Action[];
+}>();
+
+defineEmits<{
+  action: [payload: { actionName: string; rowData: T }];
 }>();
 
 const formatValue = (value: any) => {

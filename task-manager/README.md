@@ -113,6 +113,21 @@ The `src/config/` folder centralizes all constants and configuration:
 - Make easier and faster the internationalization (i18n)
 - Single source of truth for app constants
 
+### Component Extraction & Reusability
+
+Components follow a clear separation of concerns:
+
+- **Reusable components** (`Button`, `Form`, `Table`): Single responsibility, props-based configuration, easy to test
+- **Generic components**: Table component uses Vue 3 generics (`<T extends object>`) for type safety
+- **View-Component separation**: Views handle routing and page logic, components focus on presentation
+- **Single slot pattern**: Form component uses slots for flexible content
+
+**Benefits**:
+- Components testable in isolation
+- No UI code duplication
+- Consistent styling across the app
+- Easy to maintain and extend
+
 #### Switching from localStorage to API
 
 You only need to change one line:

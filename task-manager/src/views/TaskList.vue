@@ -32,7 +32,7 @@ import { useTaskViewModel } from '@/composables/useTaskViewModel';
 import type { Task } from '@/types/Task';
 import { useRouter } from 'vue-router';
 
-const { tasks, loading, error, loadTasks } = useTaskViewModel();
+const { tasks, loading, error, loadTasks, removeTask } = useTaskViewModel();
 
 const router = useRouter();
 
@@ -53,9 +53,12 @@ onMounted(() => {
   loadTasks();
 });
 
-const handleAction = ({ actionName, rowData }: { actionName: string, rowData: Task }) => {
+const handleAction = async ({ actionName, rowData }: { actionName: string, rowData: Task }) => {
   if (actionName === 'edit') {
     router.push(`/edit/${rowData.id}`)
+  }
+  if (actionName === 'delete') {
+    await removeTask(rowData.id);
   }
 }
 const handleAddTask = () => {

@@ -2,6 +2,7 @@ import { ref, computed } from 'vue';
 import { taskService } from '@/services/task-service';
 import type { Task } from '@/types/Task';
 
+
 /**
  * Task ViewModel Composable
  * Handles presentation logic and state management for tasks
@@ -32,9 +33,9 @@ export function useTaskViewModel() {
    * Add a new task
    * @param task task to add
    */
-  const addNewTask = async (task: Task): Promise<void> => {
+  const addNewTask = async (task: Pick<Task, 'title' | 'description' | 'dueDate'>): Promise<void> => {
     try {
-      await taskService.addTask(task);
+      await taskService.addTask({ ...task, id: crypto.randomUUID(), state: 'Pending' });
       tasks.value = await taskService.getTasks();
       error.value = null;
     } catch (err) {

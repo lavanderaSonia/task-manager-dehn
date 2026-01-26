@@ -1,10 +1,7 @@
-<script setup lang="ts">
-import TaskList from '@/views/TaskList.vue';
-</script>
-
 <template>
-  <TaskList/>
+  <RouterView />
 </template>
 
-<style scoped>
-</style>
+<script setup lang="ts">
+import { RouterView } from 'vue-router';
+</script>

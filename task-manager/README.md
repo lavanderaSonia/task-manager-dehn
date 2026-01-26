@@ -66,6 +66,38 @@ The application uses a N-Layers architecture that make easier maintenance and te
 └─────────────────────────────────┘
 ```
 
+### Design Patterns Used
+
+#### 1. **Dependency Injection**
+The `TaskService` receives the repository interface as a constructor parameter, not instantiating it internally. This allows:
+- Easy testing with mock repositories
+- Runtime flexibility to switch implementations
+- Loose coupling between layers
+
+#### 2. **Repository Pattern**
+`ITaskRepository` defines a contract for data access. Implementations can be localStorage, API, database, etc. without affecting higher layers.
+
+#### 3. **Composable Pattern (Vue 3)**
+`useTaskViewModel` is a reusable composition function that:
+- Encapsulates state and logic
+- Manages loading states and errors
+- Can be shared across multiple components
+
+### Error Handling Strategy
+
+Each layer has proper error handling:
+- **View Layer**: Displays error messages to users
+- **ViewModel**: Catches errors and sets error state
+- **Service**: Delegates to repository
+- **Repository**: Handles data access errors
+
+### Type Safety with TypeScript
+
+- Strong typing across all layers (`Task` interface, async return types)
+- Prevents runtime errors at compile time
+- Interfaces for abstraction (`ITaskRepository`)
+- Partial types for updates (`Partial<Task>`)
+
 #### Switching from localStorage to API
 
 You only need to change one line:

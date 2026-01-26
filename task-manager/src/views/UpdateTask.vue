@@ -39,6 +39,15 @@
           <input id="dueDate" v-model="formData.dueDate" type="date"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
+
+        <!-- Completed checkbox -->
+        <div class="mb-4">
+          <label for="completed" class="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <input id="completed" v-model="formData.completed" type="checkbox"
+              class="w-4 h-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer" />
+            Mark as completed
+          </label>
+        </div>
       </Form>
     </div>
   </div>
@@ -57,7 +66,8 @@ const { getTask, updateExistingTask, loading, error } = useTaskViewModel();
 const formData = ref({
   title: '',
   description: '',
-  dueDate: ''
+  dueDate: '',
+  completed: false
 });
 
 onMounted(() => {
@@ -77,7 +87,8 @@ const loadTask = async () => {
       formData.value = {
         title: task.title,
         description: task.description,
-        dueDate: dueDate!
+        dueDate: dueDate!,
+        completed: task.state === 'Completed'
       };
     }
   } catch (err) {
@@ -91,10 +102,12 @@ const handleSubmit = async () => {
     await updateExistingTask(taskId, {
       title: formData.value.title,
       description: formData.value.description,
-      dueDate: formData.value.dueDate ? new Date(formData.value.dueDate) : new Date()
+      dueDate: formData.value.dueDate ? new Date(formData.value.dueDate) : new Date(),
+      state: formData.value.completed ? 'Completed' : 'Pending'
     });
     router.push('/tasks');
-  } catch (err) {
+  }
+  catch (err) {
     console.error('Error updating task:', err);
   }
 };

@@ -41,6 +41,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Form from '@/components/Form.vue';
 import { useTaskViewModel } from '@/composables/useTaskViewModel';
+import { APP_ROUTES } from '@/config/routes';
 
 const router = useRouter();
 const { addNewTask } = useTaskViewModel();
@@ -58,13 +59,13 @@ const handleSubmit = async () => {
       description: formData.value.description,
       dueDate: formData.value.dueDate ? new Date(formData.value.dueDate) : new Date(),
     });
-    router.push('/tasks');
+    router.push(APP_ROUTES.TASKS);
   } catch (error) {
     console.error('Error adding task:', error);
   }
 };
 
 const handleCancel = () => {
-  router.push('/tasks');
+  router.push(APP_ROUTES.TASKS);
 };
 </script>

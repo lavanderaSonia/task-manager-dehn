@@ -58,6 +58,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Form from '@/components/Form.vue';
 import { useTaskViewModel } from '@/composables/useTaskViewModel';
+import { APP_ROUTES } from '@/config/routes';
 
 const router = useRouter();
 const route = useRoute();
@@ -105,7 +106,7 @@ const handleSubmit = async () => {
       dueDate: formData.value.dueDate ? new Date(formData.value.dueDate) : new Date(),
       state: formData.value.completed ? 'Completed' : 'Pending'
     });
-    router.push('/tasks');
+    router.push(APP_ROUTES.TASKS);
   }
   catch (err) {
     console.error('Error updating task:', err);
@@ -113,6 +114,6 @@ const handleSubmit = async () => {
 };
 
 const handleCancel = () => {
-  router.push('/tasks');
+  router.push(APP_ROUTES.TASKS);
 };
 </script>

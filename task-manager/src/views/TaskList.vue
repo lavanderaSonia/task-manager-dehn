@@ -31,6 +31,7 @@ import Button from '@/components/Button.vue';
 import { useTaskViewModel } from '@/composables/useTaskViewModel';
 import type { Task } from '@/types/Task';
 import { useRouter } from 'vue-router';
+import { APP_ROUTES } from '@/config/routes';
 
 const { tasks, loading, error, loadTasks, removeTask } = useTaskViewModel();
 
@@ -55,13 +56,14 @@ onMounted(() => {
 
 const handleAction = async ({ actionName, rowData }: { actionName: string, rowData: Task }) => {
   if (actionName === 'edit') {
-    router.push(`/edit/${rowData.id}`)
+    router.push(APP_ROUTES.EDIT_TASK(rowData.id))
   }
   if (actionName === 'delete') {
     await removeTask(rowData.id);
   }
 }
+
 const handleAddTask = () => {
-  router.push('/add-task')
+  router.push(APP_ROUTES.ADD_TASK)
 }
 </script>

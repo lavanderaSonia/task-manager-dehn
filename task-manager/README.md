@@ -1,5 +1,31 @@
-# Vue 3 + TypeScript + Vite
+# Task Manager
+CRUD app to manage tasks
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Commands
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+### Development
+```bash
+npm run dev
+```
+Starts the development server with hot module replacement. The app will be available at `http://localhost:5173`
+
+### Testing
+```bash
+npm run test
+```
+Runs the test suite using Vitest in watch mode. Tests cover all application layers:
+- Repository layer (data persistence)
+- Service layer (business logic)
+- ViewModel layer (state management)
+
+### Test Coverage
+```bash
+npm run test:coverage
+```
+Generates test coverage report showing which parts of the code are tested. Results are saved in the `coverage/` directory.
+
+### Build
+```bash
+npm run build
+```
+Builds the application for production. Output is generated in the `dist/` directory.

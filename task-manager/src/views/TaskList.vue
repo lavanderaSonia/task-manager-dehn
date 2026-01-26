@@ -54,7 +54,9 @@ onMounted(() => {
 });
 
 const handleAction = ({ actionName, rowData }: { actionName: string, rowData: Task }) => {
-  console.log("SELECTED", actionName, rowData);
+  if (actionName === 'edit') {
+    router.push(`/edit/${rowData.id}`)
+  }
 }
 const handleAddTask = () => {
   router.push('/add-task')

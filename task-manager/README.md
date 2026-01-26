@@ -98,6 +98,21 @@ Each layer has proper error handling:
 - Interfaces for abstraction (`ITaskRepository`)
 - Partial types for updates (`Partial<Task>`)
 
+### Configuration Management
+
+The `src/config/` folder centralizes all constants and configuration:
+
+- **messages.ts**: Error and info messages in one place (easy to update or translate)
+- **storage-keys.ts**: localStorage keys to avoid magic strings
+- **ui-labels.ts**: UI text labels for consistency
+- **routes.ts**: Route definitions
+
+**Benefits**:
+- No magic strings scattered across the code
+- Easy maintenance - change once, works everywhere
+- Make easier and faster the internationalization (i18n)
+- Single source of truth for app constants
+
 #### Switching from localStorage to API
 
 You only need to change one line:

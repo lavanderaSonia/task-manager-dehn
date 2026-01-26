@@ -8,10 +8,17 @@ import type { Task } from '@/types/Task';
 export class LocalStorageTaskRepository implements ITaskRepository {
   private readonly STORAGE_KEY = 'tasks';
 
+  private deserializeTask(taskData: any): Task {
+    return {
+      ...taskData,
+      dueDate: taskData.dueDate ? new Date(taskData.dueDate) : new Date()
+    };
+  }
+
   async getTasks(): Promise<Task[]> {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
+      return data ? JSON.parse(data).map(this.deserializeTask) : [];
     } catch (error) {
       console.error('Error getting tasks from localStorage:', error);
       return [];

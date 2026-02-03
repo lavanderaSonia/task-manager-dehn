@@ -4,80 +4,70 @@ import { STORAGE_KEYS } from '@/config/storage-keys';
 
 /**
  * LocalStorage implementation of TaskRepository
- * Persists tasks in browser localStorage
+ * Only persists raw data - no business logic
  */
 export class LocalStorageTaskRepository implements ITaskRepository {
   private readonly STORAGE_KEY = STORAGE_KEYS.TASKS;
 
-  private deserializeTask(taskData: any): Task {
-    return {
-      ...taskData,
-      dueDate: taskData.dueDate ? new Date(taskData.dueDate) : new Date()
-    };
-  }
-
-  async getTasks(): Promise<Task[]> {
+  /**
+   * Private helper to get tasks from localStorage
+   */
+  private getTasksFromStorage(): Task[] {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
-      return data ? JSON.parse(data).map(this.deserializeTask) : [];
+      return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('Error getting tasks from localStorage:', error);
+      console.error('Error reading from localStorage:', error);
       return [];
     }
   }
 
-  async getTaskById(id: string): Promise<Task | null> {
+  /**
+   * Private helper to save tasks to localStorage
+   */
+  private saveTasksToStorage(tasks: Task[]): void {
     try {
-      const tasks = await this.getTasks();
-      return tasks.find(task => task.id === id) || null;
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(tasks));
     } catch (error) {
-      console.error('Error getting task by id from localStorage:', error);
-      return null;
+      console.error('Error writing to localStorage:', error);
+      throw new Error('Failed to save tasks');
     }
+  }
+
+  async getTasks(): Promise<Task[]> {
+    return this.getTasksFromStorage();
+  }
+
+  async getTaskById(id: string): Promise<Task | null> {
+    const tasks = this.getTasksFromStorage();
+    return tasks.find((task: Task) => task.id === id) || null;
   }
 
   async addTask(task: Task): Promise<void> {
-    try {
-      const tasks = await this.getTasks();
-      const updatedTasks = [...tasks, task];
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedTasks));
-    } catch (error) {
-      console.error('Error adding task to localStorage:', error);
-      throw new Error('Failed to add task');
-    }
+    const tasks = this.getTasksFromStorage();
+    this.saveTasksToStorage([...tasks, task]);
   }
 
   async updateTask(id: string, updates: Partial<Task>): Promise<boolean> {
-    try {
-      const tasks = await this.getTasks();
-      const taskExists = tasks.some(task => task.id === id);
+    const tasks = this.getTasksFromStorage();
+    const taskIndex = tasks.findIndex((task: Task) => task.id === id);
 
-      if (!taskExists) return false;
+    if (taskIndex === -1) return false;
 
-      const updatedTasks = tasks.map(task =>
-        task.id === id ? { ...task, ...updates } : task
-      );
-
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedTasks));
-      return true;
-    } catch (error) {
-      console.error('Error updating task in localStorage:', error);
-      throw new Error('Failed to update task');
-    }
+    const updatedTasks = tasks.map((task, index) =>
+      index === taskIndex ? { ...task, ...updates } : task
+    );
+    this.saveTasksToStorage(updatedTasks);
+    return true;
   }
 
   async deleteTask(id: string): Promise<boolean> {
-    try {
-      const tasks = await this.getTasks();
-      const filteredTasks = tasks.filter(task => task.id !== id);
+    const tasks = this.getTasksFromStorage();
+    const filteredTasks = tasks.filter((task: Task) => task.id !== id);
 
-      if (filteredTasks.length === tasks.length) return false;
+    if (filteredTasks.length === tasks.length) return false;
 
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filteredTasks));
-      return true;
-    } catch (error) {
-      console.error('Error deleting task from localStorage:', error);
-      throw new Error('Failed to delete task');
-    }
+    this.saveTasksToStorage(filteredTasks);
+    return true;
   }
 }

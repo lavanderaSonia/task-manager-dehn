@@ -4,7 +4,7 @@ import { LocalStorageTaskRepository } from '@/repositories/LocalStorageTaskRepos
 
 /**
  * Task Service with Dependency Injection
- * Business logic layer that abstracts data access
+ * Business logic layer: transformations, validations, and CRUD operations
  */
 export class TaskService {
   private repository: ITaskRepository;
@@ -14,28 +14,64 @@ export class TaskService {
   }
 
   /**
-   * Get all tasks
-   * @returns list of all tasks
+   * Deserialize raw task data to Task object
+   * Converts string dates to Date objects
    */
-  async getTasks(): Promise<Task[]> {
-    return this.repository.getTasks();
+  private deserializeTask(taskData: any): Task {
+    return {
+      ...taskData,
+      dueDate: taskData.dueDate ? new Date(taskData.dueDate) : new Date()
+    };
   }
 
   /**
-   * Get task information by id
+   * Get all tasks with deserialization
+   * @returns list of all tasks with proper Date objects
+   */
+  async getTasks(): Promise<Task[]> {
+    try {
+      const tasks = await this.repository.getTasks();
+      return tasks.map(task => this.deserializeTask(task));
+    } catch (error) {
+      console.error('Error getting tasks:', error);
+      throw new Error('Failed to retrieve tasks');
+    }
+  }
+
+  /**
+   * Get task information by id with deserialization
    * @param id task id
    * @returns information of selected task or null
    */
   async getTaskById(id: string): Promise<Task | null> {
-    return this.repository.getTaskById(id);
+    try {
+      const task = await this.repository.getTaskById(id);
+      return task ? this.deserializeTask(task) : null;
+    } catch (error) {
+      console.error('Error getting task by id:', error);
+      throw new Error('Failed to retrieve task');
+    }
   }
 
   /**
-   * Add task to list
+   * Add task to list with validation
    * @param task task to add
    */
   async addTask(task: Task): Promise<void> {
-    return this.repository.addTask(task);
+    try {
+      // Business logic: validate required fields
+      if (!task.title?.trim()) {
+        throw new Error('Task title is required');
+      }
+      if (!task.description?.trim()) {
+        throw new Error('Task description is required');
+      }
+
+      await this.repository.addTask(task);
+    } catch (error) {
+      console.error('Error adding task:', error);
+      throw error instanceof Error ? error : new Error('Failed to add task');
+    }
   }
 
   /**
@@ -45,7 +81,12 @@ export class TaskService {
    * @returns true if task updated or false if not found
    */
   async updateTask(id: string, updates: Partial<Task>): Promise<boolean> {
-    return this.repository.updateTask(id, updates);
+    try {
+      return await this.repository.updateTask(id, updates);
+    } catch (error) {
+      console.error('Error updating task:', error);
+      throw new Error('Failed to update task');
+    }
   }
 
   /**
@@ -54,7 +95,12 @@ export class TaskService {
    * @returns true if task deleted or false if not found
    */
   async deleteTask(id: string): Promise<boolean> {
-    return this.repository.deleteTask(id);
+    try {
+      return await this.repository.deleteTask(id);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      throw new Error('Failed to delete task');
+    }
   }
 }
 

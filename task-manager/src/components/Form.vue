@@ -8,7 +8,7 @@
     <!-- Actions -->
     <div class="flex gap-3 justify-end">
       <Button :title="BUTTON_LABELS.CANCEL" variant="secondary" @click="$emit('cancel')" />
-      <Button :title="BUTTON_LABELS.SAVE" variant="primary" @click="$emit('submit')" />
+      <Button type="submit" :title="BUTTON_LABELS.SAVE" variant="primary" />
     </div>
   </form>
 </template>

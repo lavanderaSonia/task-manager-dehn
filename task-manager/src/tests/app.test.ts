@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { TaskService } from '@/services/task-service'
 import { useTaskViewModel } from '@/composables/useTaskViewModel'
 import { LocalStorageTaskRepository } from '@/repositories/LocalStorageTaskRepository'
-import type { Task } from '@/types/Task'
+import { State, type Task } from '@/types/Task'
 
 /**
  * Integration Testing Suite - Task Manager Application
@@ -29,7 +29,7 @@ describe('Task Manager - Integration Tests', () => {
         title: 'Test Task',
         description: 'Testing CRUD',
         dueDate: new Date('2025-12-31'),
-        state: 'Pending'
+        state: State.PENDING
       }
       await service.addTask(newTask)
 
@@ -41,7 +41,7 @@ describe('Task Manager - Integration Tests', () => {
       expect(found?.title).toBe('Test Task')
 
       // UPDATE
-      const updated = await service.updateTask('task-1', { state: 'Completed' })
+      const updated = await service.updateTask('task-1', { state: State.COMPLETED })
       expect(updated).toBe(true)
       expect((await service.getTaskById('task-1'))?.state).toBe('Completed')
 
@@ -61,7 +61,7 @@ describe('Task Manager - Integration Tests', () => {
           title: `Task ${i}`,
           description: `Description ${i}`,
           dueDate: new Date(),
-          state: 'Pending'
+          state: State.PENDING
         })
       }
 
@@ -69,11 +69,11 @@ describe('Task Manager - Integration Tests', () => {
       expect(tasks).toHaveLength(3)
 
       // Update states
-      await service.updateTask('task-1', { state: 'Completed' })
-      await service.updateTask('task-2', { state: 'Completed' })
+      await service.updateTask('task-1', { state: State.COMPLETED })
+      await service.updateTask('task-2', { state: State.COMPLETED })
 
       const remaining = await service.getTasks()
-      const completed = remaining.filter(t => t.state === 'Completed')
+      const completed = remaining.filter(t => t.state === State.COMPLETED)
       expect(completed).toHaveLength(2)
     })
   })
@@ -94,7 +94,7 @@ describe('Task Manager - Integration Tests', () => {
       const taskId = tasks.value[0]!.id
 
       // Update task
-      const updateSuccess = await updateExistingTask(taskId, { state: 'Completed' })
+      const updateSuccess = await updateExistingTask(taskId, { state: State.COMPLETED })
       expect(updateSuccess).toBe(true)
       expect(tasks.value[0]?.state).toBe('Completed')
 

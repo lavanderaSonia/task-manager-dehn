@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { taskService } from '@/services/task-service';
-import type { Task } from '@/types/Task';
+import { State, type Task } from '@/types/Task';
 import { ERROR_MESSAGES } from '@/config/messages';
 
 /**
@@ -35,7 +35,7 @@ export function useTaskViewModel() {
    */
   const addNewTask = async (task: Pick<Task, 'title' | 'description' | 'dueDate'>): Promise<void> => {
     try {
-      await taskService.addTask({ ...task, id: crypto.randomUUID(), state: 'Pending' });
+      await taskService.addTask({ ...task, id: crypto.randomUUID(), state: State.PENDING });
       tasks.value = await taskService.getTasks();
       error.value = null;
     } catch (err) {

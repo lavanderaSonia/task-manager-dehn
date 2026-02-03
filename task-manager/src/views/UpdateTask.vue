@@ -62,6 +62,7 @@ import { useTaskViewModel } from '@/composables/useTaskViewModel';
 import { APP_ROUTES } from '@/config/routes';
 import { FORM_LABELS, PLACEHOLDER_TEXTS } from '@/config/ui-labels';
 import { INFO_MESSAGES } from '@/config/messages';
+import { State } from '@/types/Task';
 
 const router = useRouter();
 const route = useRoute();
@@ -107,7 +108,7 @@ const handleSubmit = async () => {
       title: formData.value.title,
       description: formData.value.description,
       dueDate: formData.value.dueDate ? new Date(formData.value.dueDate) : new Date(),
-      state: formData.value.completed ? 'Completed' : 'Pending'
+      state: formData.value.completed ? State.COMPLETED : State.PENDING
     });
     router.push(APP_ROUTES.TASKS);
   }
